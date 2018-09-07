@@ -95,14 +95,14 @@ def main():
 		else:
 			output = args.output
 
-		# Split base64 encode in chunks of 64 bytes	and append to list
+		# Split base64 encode in chunks of 64 bytes and append to list
 		base64_chunks = []
 		for chunk in re.findall('.{1,64}', base64_encode(input)):
 			base64_chunks.append(chunk)
 		total_tx = len(base64_chunks)
 		
 		# Safety precaution
-		print "\nBroadcasting '%s' (%skb) will require %d transaction(s) (%.1f LSK)." % (input, os.path.getsize(input), total_tx, total_tx * 0.1)
+		print "\nBroadcasting '%s' (%s bytes) will require %d transaction(s) (%.1f LSK)." % (input, '{:0,}'.format(os.path.getsize(input)), total_tx, total_tx * 0.1)
 		brickwall()
 
 		# Write extension of input file to .lsk64 output
