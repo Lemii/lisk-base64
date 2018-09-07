@@ -122,7 +122,7 @@ def main():
 			
 			# Check if broadcast was succesful
 			try:
-				if "Transaction(s) accepted" in ps_output.splitlines()[41]:
+				if any("Transaction(s) accepted" in s for s in ps_output.splitlines()):
 					# Print info to screen and write data to .lsk64 file
 					print "Chunk %s (%s) sent in TX %s" % (str(seq_int), chunk, tx_id.group(0))
 					with open(output, 'a') as f:
