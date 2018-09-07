@@ -7,6 +7,7 @@ import json
 import argparse
 import os
 import csv
+import config
 
 
 # Configure arguments and options
@@ -28,22 +29,26 @@ def base64_encode(input):
 
 # Retreive data field from transaction
 def get_data(tx_id):
-	url = "http://127.0.0.1:7000/api/transactions?id=%s" % tx_id.replace("\n", "")
+	url = "%s/api/transactions?id=%s" % (config.node, tx_id.replace("\n", ""))
 	response = requests.get(url)
 	json_data = response.json()
-	return json_data['data'][0]['asset']['data']
+	try:
+		data_field = json_data['data'][0]['asset']['data']
+		return data_field
+	except:
+		exit("TX %s does not exist or is not valid." % tx_id)
 
 
 # Build command line to create, sign and broadcast transaction
 def build_cmd(data, recipient, amount):
 	if recipient == None: 
-		recipient = "4560518704624832050L"
+		recipient = config.recipient
 	if amount == None:
-		amount = 0.00000001
+		amount = config.amount
 
-	lisk_php_folder = "/home/lisk/lisk-php/"
-	first_passphrase = "word word word word word word word word word word word word"
-	second_passphrase = "false"
+	lisk_php_folder = config.lisk_php_folder
+	first_passphrase = config.first_passphrase
+	second_passphrase = config.second_passphrase
 
 	return "php %slisk-cli.php SendTransaction %s %.8f \"%s\" %s \"%s\"" % (lisk_php_folder, recipient, amount, first_passphrase, second_passphrase, data)
 
@@ -68,10 +73,10 @@ def exit(msg):
 
 
 # Intro
-print "-----------"
+print "------------"
 print "LSK BASE-64"
 print "Mode: %s" % args.mode
-print "-----------"
+print "------------"
 
 
 def main():
@@ -114,10 +119,17 @@ def main():
 			# Retreive TX id from stdout
 			ps_output = tx.communicate()[0]
 			tx_id = re.search(r'\d{10,20}', ps_output.splitlines()[29])
-			# Print info to screen and write data to .lsk64 file
-			print "Chunk %s (%s) sent in TX %s" % (str(seq_int), chunk, tx_id.group(0))
-			with open(output, 'a') as f:	
-				f.write(str(seq_int) + "," + tx_id.group(0) + "\n")
+			
+			# Check if broadcast was succesful
+			try:
+				if "Transaction(s) accepted" in ps_output.splitlines()[41]:
+					# Print info to screen and write data to .lsk64 file
+					print "Chunk %s (%s) sent in TX %s" % (str(seq_int), chunk, tx_id.group(0))
+					with open(output, 'a') as f:
+						f.write(str(seq_int) + "," + tx_id.group(0) + "\n")
+			except:
+				exit("TX(s) could not be broadcasted.")
+
 			seq_int += 1
 		
 		print "\nScript finished succesfully."
