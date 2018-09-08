@@ -36,7 +36,7 @@ def get_data(tx_id):
 		data_field = json_data['data'][0]['asset']['data']
 		return data_field
 	except:
-		exit("TX %s does not exist or is not valid." % tx_id)
+		exit("TX %s does not exist or does not contain valid data." % tx_id)
 
 
 # Build command line to create, sign and broadcast transaction
@@ -48,8 +48,11 @@ def build_cmd(data, recipient, amount):
 
 	lisk_php_folder = config.lisk_php_folder
 	first_passphrase = config.first_passphrase
-	second_passphrase = config.second_passphrase
-
+	if config.second_passphrase == "False":
+		second_passphrase = config.second_passphrase
+	else:
+		second_passphrase = '"' + config.second_passphrase + '"'
+	
 	return "php %slisk-cli.php SendTransaction %s %.8f \"%s\" %s \"%s\"" % (lisk_php_folder, recipient, amount, first_passphrase, second_passphrase, data)
 
 
@@ -115,24 +118,33 @@ def main():
 		seq_int = 1
 		for chunk in base64_chunks:
 			# Build command line to create, sign and broadcast TX, and run command in subprocess
-			tx = subprocess.Popen(build_cmd(chunk, args.recipient, args.amount), shell=True, stdout=subprocess.PIPE)
-			# Retreive TX id from stdout
-			ps_output = tx.communicate()[0]
-			tx_id = re.search(r'\d{10,20}', ps_output.splitlines()[29])
-			
+			tx = subprocess.check_output(build_cmd(chunk, args.recipient, args.amount), shell=True)
+
+			# Search in transaction data for TX id line number
+			for i, line in enumerate(tx.splitlines(), 1):
+				#print "Scanning: %s" % line
+				if '["id"]=>' in line:
+					tx_id_line = i
+			tx_id = re.search(r'\d{10,20}', tx.splitlines()[tx_id_line])
+
 			# Check if broadcast was succesful
 			try:
-				if any("Transaction(s) accepted" in s for s in ps_output.splitlines()):
+				if any("Transaction(s) accepted" in s for s in tx.splitlines()):
 					# Print info to screen and write data to .lsk64 file
 					print "Chunk %s (%s) sent in TX %s" % (str(seq_int), chunk, tx_id.group(0))
 					with open(output, 'a') as f:
 						f.write(str(seq_int) + "," + tx_id.group(0) + "\n")
+
 			except:
-				exit("TX(s) could not be broadcasted.")
+				print "TX failed to broadcast."
+				print "'%s' is not a valid TX id" % tx.splitlines()[tx_id_line]
+				with open("failed_tx.log", 'w') as f:
+					f.write(tx)
+				exit("Last transaction data written to failed_tx.log")
 
 			seq_int += 1
 		
-		print "\nScript finished succesfully."
+		print "\nScript finished."
 		exit("Transactions saved in '%s'." % output)
 
 
@@ -154,13 +166,13 @@ def main():
 			encoded_object = ""	
 			for line in csv_reader:
 				encoded_object += get_data(line[1])
-				print "Data %s retreived from TX %s" % (get_data(line[1]), line[1])
+				print "Data %s retrieved from TX %s" % (get_data(line[1]), line[1])
 				tx_number += 1
 	
 		with open(output, 'wb') as f2:
 			f2.write(base64.decodestring(encoded_object))
 
-		print "\nScript finished succesfully."
+		print "\nScript finished."
 		print "Total TX processed: %d" % tx_number
 		exit("Decoded object saved as '%s'." % output)
 
