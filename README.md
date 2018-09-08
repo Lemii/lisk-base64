@@ -12,6 +12,19 @@ This is a proof of concept. Credits to [Korben3](https://github.com/Korben3) for
 
 If you like this software, please consider a donation =] `6725360537423611335L`
 
+## Prerequisites (encode mode only)
+Considering there’s no Lisk library for Python yet, and the current version of Lisk Commander does not support the data field, [karek314](https://github.com/karek314/)'s awesome [lisk-php](https://github.com/karek314/lisk-php) is used for pushing TXs to the network as a temporary workaround.
+
+**Please install and configure this tool if you’d like to use encode mode**.
+
+## Installation
+```
+git clone https://github.com/Lemii/lisk-base64
+cd lisk-base64
+pip install -r requirements.txt
+```
+Open `config.py` and enter your information. Account information is only required if you wish to use `encode` mode.
+
 ## Usage
 
 `lisk-base64.py` expects at least two arguments; **mode** (positional) and **input** (`-i` or `--input`).
@@ -65,17 +78,3 @@ optional arguments:
   -a AMOUNT, --amount AMOUNT
                         specify LSK amount to be sent per TX
 ```
-
-
-## Prerequisites (encode mode only)
-Considering there’s no Lisk library for Python yet, and the current version of Lisk Commander does not support the data field, [karek314](https://github.com/karek314/)'s awesome [lisk-php](https://github.com/karek314/lisk-php) is used for pushing TXs to the network as a temporary workaround.
-
-**Please install and configure this tool if you’d like to use encode mode**.
-
-## Installation
-```
-git clone https://github.com/Lemii/lisk-base64
-cd lisk-base64
-pip install -r requirements.txt
-```
-Open `config.py` and enter your information. Account information is only required if you wish to use `encode` mode.
