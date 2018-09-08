@@ -6,9 +6,7 @@ Lisk Base64 is a tool that allows you to:
 
 A `.lsk64` file is created upon encoding an input. You can use this to decode the object back to its original form, using data from the Lisk blockchain.
 
-Example `.lsk64` files are supplied in the examples folder.
-
-This is a proof of concept. Credits to [Korben3](https://github.com/Korben3) for working on the idea and brainstorming together.
+This is a **proof of concept**. Credits to [Korben3](https://github.com/Korben3) for working on the idea and brainstorming together.
 
 If you like this software, please consider a donation =] `6725360537423611335L`
 
