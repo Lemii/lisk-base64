@@ -76,3 +76,5 @@ optional arguments:
   -a AMOUNT, --amount AMOUNT
                         specify LSK amount to be sent per TX
 ```
+## License
+Licensed under the [MIT license](https://github.com/Lemii/lisk-base64/blob/master/LICENSE)
