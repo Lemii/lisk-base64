@@ -10,7 +10,7 @@ This is a **proof of concept**. Credits to [Korben3](https://github.com/Korben3)
 
 A little demonstration video can be found [here](https://www.youtube.com/watch?v=jU8FIDXPkbA).
 
-If you like this software, please consider a donation =] `6725360537423611335L`
+If you find my tools useful, please consider voting for my delegate `lemii` or donating to `5222060513855166167L`. Thanks!
 
 ## Prerequisites (encode mode only)
 Considering there’s no Lisk library for Python yet, and the current version of Lisk Commander does not support the data field, [karek314](https://github.com/karek314/)'s awesome [lisk-php](https://github.com/karek314/lisk-php) is used for pushing TXs to the network as a temporary workaround.
