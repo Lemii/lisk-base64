@@ -8,7 +8,7 @@ A `.lsk64` file is created upon encoding an input. You can use this to decode th
 
 This is a **proof of concept**. Credits to [Korben3](https://github.com/Korben3) for working on the idea and brainstorming together.
 
-A little demonstration video can be found [here](https://www.youtube.com/watch?v=jU8FIDXPkbA).
+A little demonstration video can be found [here](https://www.youtube.com/watch?v=-j4Tp8DPcBw).
 
 If you find my tools useful, please consider voting for my delegate `lemii` or donating to `5222060513855166167L`. Thanks!
 
